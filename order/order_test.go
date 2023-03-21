@@ -4,98 +4,97 @@ import (
 	"reflect"
 	"testing"
 
-	fsmorderdemo "github.com/jormin/fsm-order-demo"
-	"github.com/jormin/fsm-order-demo/helper"
+	fsm "github.com/WTongStudio/fsm-order-demo"
+	"github.com/WTongStudio/fsm-order-demo/helper"
 )
 
 // TestOrderStateMachine 测试子订单状态机
 func TestOrderStateMachine(t *testing.T) {
 	s := NewStateMachine()
 	type args struct {
-		from  fsmorderdemo.State
-		event fsmorderdemo.Event
+		from  fsm.State
+		event fsm.Event
 	}
-
 	tests := []struct {
 		name    string
 		args    args
-		want    fsmorderdemo.State
+		want    fsm.State
 		wantErr error
 	}{
 		{
-			name:    "支付：待支付 ---> 待确认",
+			name:    "支付事件：待支付 ---> 待确认",
 			args:    args{from: StateWaitPay, event: EventPay},
 			want:    StateWaitConfirm,
 			wantErr: nil,
 		},
 		{
-			name:    "取消：待支付 ---> 已取消",
+			name:    "取消事件：待支付 ---> 已取消",
 			args:    args{from: StateWaitPay, event: EventCancel},
 			want:    StateCancel,
 			wantErr: nil,
 		},
 		{
-			name:    "支付确认：待支付 ---> 待发货",
+			name:    "支付确认事件：待支付 ---> 待发货",
 			args:    args{from: StateWaitPay, event: EventPayConfirm},
-			want:    StateWaitDelive,
+			want:    StateWaitDeliver,
 			wantErr: nil,
 		},
 		{
-			name:    "支付确认：待确认 ---> 待发货",
+			name:    "支付确认事件：待确认 ---> 待发货",
 			args:    args{from: StateWaitConfirm, event: EventPayConfirm},
-			want:    StateWaitDelive,
+			want:    StateWaitDeliver,
 			wantErr: nil,
 		},
 		{
-			name:    "发货：待发货 ---> 待收货",
-			args:    args{from: StateWaitDelive, event: EventDelive},
+			name:    "发货事件：待发货 ---> 待收货",
+			args:    args{from: StateWaitDeliver, event: EventDeliver},
 			want:    StateWaitReceive,
 			wantErr: nil,
 		},
 		{
-			name:    "申请退款：待发货 ---> 售后中-退款",
-			args:    args{from: StateWaitDelive, event: EventApplyRefund},
+			name:    "申请退款事件：待发货 ---> 售后中-退款",
+			args:    args{from: StateWaitDeliver, event: EventApplyRefund},
 			want:    StateRefund,
 			wantErr: nil,
 		},
 		{
-			name:    "取消售后：售后中-退款 ---> 待发货",
+			name:    "取消售后事件：售后中-退款 ---> 待发货",
 			args:    args{from: StateRefund, event: EventCancelRefund},
-			want:    StateWaitDelive,
+			want:    StateWaitDeliver,
 			wantErr: nil,
 		},
 		{
-			name:    "退款完成：售后中-退款 ---> 已完成",
+			name:    "退款完成事件：售后中-退款 ---> 已完成",
 			args:    args{from: StateRefund, event: EventRefundCompleted},
 			want:    StateCompleted,
 			wantErr: nil,
 		},
 		{
-			name:    "签收：待收货 ---> 已签收",
+			name:    "签收事件：待收货 ---> 已签收",
 			args:    args{from: StateWaitReceive, event: EventSigned},
 			want:    StateSigned,
 			wantErr: nil,
 		},
 		{
-			name:    "申请退货退款：已签收 ---> 售后中-退货退款",
+			name:    "申请退货退款事件：已签收 ---> 售后中-退货退款",
 			args:    args{from: StateSigned, event: EventApplyGoodsRefund},
 			want:    StateGoodsRefund,
 			wantErr: nil,
 		},
 		{
-			name:    "订单完成：已签收 ---> 已完成",
+			name:    "订单完成事件：已签收 ---> 已完成",
 			args:    args{from: StateSigned, event: EventCompleted},
 			want:    StateCompleted,
 			wantErr: nil,
 		},
 		{
-			name:    "取消售后：售后中-退货退款 ---> 已签收",
+			name:    "取消售后事件：售后中-退货退款 ---> 已签收",
 			args:    args{from: StateGoodsRefund, event: EventCancelRefund},
 			want:    StateSigned,
 			wantErr: nil,
 		},
 		{
-			name:    "退款完成：售后中-退货退款 ---> 已完成",
+			name:    "退款完成事件：售后中-退货退款 ---> 已完成",
 			args:    args{from: StateGoodsRefund, event: EventRefundCompleted},
 			want:    StateCompleted,
 			wantErr: nil,

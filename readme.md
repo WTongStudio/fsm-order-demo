@@ -323,25 +323,25 @@ const (
 
 ```go
 // transitions 转变器
-var transitions = map[fsmorderdemo.State]map[fsmorderdemo.Event]fsmorderdemo.Transition{
+var transitions = map[fsm.State]map[fsm.Event]fsm.Transition{
 	StateWaitPay: {
 		// 取消：待支付 ---> 已取消
-		EventCancel: fsmorderdemo.Transition{
+		EventCancel: fsm.Transition{
 			From: StateWaitPay, Event: EventCancel, To: StateCancel, Action: action.Cancel, Processor: nil,
 		},
 		// 支付：待支付 ---> 待确认
-		EventPay: fsmorderdemo.Transition{
+		EventPay: fsm.Transition{
 			From: StateWaitPay, Event: EventPay, To: StateWaitConfirm, Action: action.Pay,
 			Processor: &processor.PayEventProcessor{},
 		},
 		// 支付确认：待支付 ---> 已支付
-		EventPayConfirm: fsmorderdemo.Transition{
+		EventPayConfirm: fsm.Transition{
 			From: StateWaitPay, Event: EventPayConfirm, To: StatePayied, Action: action.PayConfirm, Processor: nil,
 		},
 	},
 	StateWaitConfirm: {
 		// 支付确认：待确认 ---> 已支付
-		EventPayConfirm: fsmorderdemo.Transition{
+		EventPayConfirm: fsm.Transition{
 			From: StateWaitConfirm, Event: EventPayConfirm, To: StatePayied, Action: action.PayConfirm, Processor: nil,
 		},
 	},
@@ -415,76 +415,76 @@ const (
 
 ```go
 // transitions 转变器
-var transitions = map[fsmorderdemo.State]map[fsmorderdemo.Event]fsmorderdemo.Transition{
+var transitions = map[fsm.State]map[fsm.Event]fsm.Transition{
 	StateWaitPay: {
 		// 取消：待支付 ---> 已取消
-		EventCancel: fsmorderdemo.Transition{
+		EventCancel: fsm.Transition{
 			From: StateWaitPay, Event: EventCancel, To: StateCancel, Action: action.Cancel, Processor: nil,
 		},
 		// 支付：待支付 ---> 待确认
-		EventPay: fsmorderdemo.Transition{
+		EventPay: fsm.Transition{
 			From: StateWaitPay, Event: EventPay, To: StateWaitConfirm, Action: action.Pay,
 			Processor: &processor.PayEventProcessor{},
 		},
 		// 支付确认：待支付 ---> 待发货
-		EventPayConfirm: fsmorderdemo.Transition{
+		EventPayConfirm: fsm.Transition{
 			From: StateWaitPay, Event: EventPayConfirm, To: StateWaitDelive, Action: action.PayConfirm, Processor: nil,
 		},
 	},
 	StateWaitConfirm: {
 		// 支付确认：待确认 ---> 待发货
-		EventPayConfirm: fsmorderdemo.Transition{
+		EventPayConfirm: fsm.Transition{
 			From: StateWaitConfirm, Event: EventPayConfirm, To: StateWaitDelive, Action: action.PayConfirm,
 			Processor: nil,
 		},
 	},
 	StateWaitDelive: {
 		// 发货：待发货 ---> 待收货
-		EventDelive: fsmorderdemo.Transition{
+		EventDelive: fsm.Transition{
 			From: StateWaitDelive, Event: EventDelive, To: StateWaitReceive, Action: action.Delive, Processor: nil,
 		},
 		// 申请退款：待发货 ---> 售后中-退款
-		EventApplyRefund: fsmorderdemo.Transition{
+		EventApplyRefund: fsm.Transition{
 			From: StateWaitDelive, Event: EventApplyRefund, To: StateRefund, Action: action.ApplyRefund, Processor: nil,
 		},
 	},
 	StateRefund: {
 		// 取消售后：售后中-退款 ---> 待发货
-		EventCancelRefund: fsmorderdemo.Transition{
+		EventCancelRefund: fsm.Transition{
 			From: StateRefund, Event: EventCancelRefund, To: StateWaitDelive, Action: action.CancelRefund,
 			Processor: nil,
 		},
 		// 退款完成：售后中-退款 ---> 已完成
-		EventRefundCompleted: fsmorderdemo.Transition{
+		EventRefundCompleted: fsm.Transition{
 			From: StateRefund, Event: EventRefundCompleted, To: StateCompleted, Action: action.RefundCompleted,
 			Processor: nil,
 		},
 	},
 	StateWaitReceive: {
 		// 签收：待收货 ---> 已签收
-		EventSigned: fsmorderdemo.Transition{
+		EventSigned: fsm.Transition{
 			From: StateWaitReceive, Event: EventSigned, To: StateSigned, Action: action.Signed, Processor: nil,
 		},
 	},
 	StateSigned: {
 		// 申请退货退款：已签收 ---> 售后中-退货退款
-		EventApplyGoodsRefund: fsmorderdemo.Transition{
+		EventApplyGoodsRefund: fsm.Transition{
 			From: StateSigned, Event: EventApplyGoodsRefund, To: StateGoodsRefund, Action: action.ApplyGoodsRefund,
 			Processor: nil,
 		},
 		// 订单完成：已签收 ---> 已完成
-		EventCompleted: fsmorderdemo.Transition{
+		EventCompleted: fsm.Transition{
 			From: StateSigned, Event: EventCompleted, To: StateCompleted, Action: action.Completed, Processor: nil,
 		},
 	},
 	StateGoodsRefund: {
 		// 取消售后：售后中-退货退款 ---> 已签收
-		EventCancelRefund: fsmorderdemo.Transition{
+		EventCancelRefund: fsm.Transition{
 			From: StateGoodsRefund, Event: EventCancelRefund, To: StateSigned, Action: action.CancelRefund,
 			Processor: nil,
 		},
 		// 退款完成：售后中-退货退款 ---> 已完成
-		EventRefundCompleted: fsmorderdemo.Transition{
+		EventRefundCompleted: fsm.Transition{
 			From: StateGoodsRefund, Event: EventRefundCompleted, To: StateCompleted, Action: action.RefundCompleted,
 			Processor: nil,
 		},
@@ -561,55 +561,55 @@ const (
 ##### 转变器
 
 ```go
-var transitions = map[fsmorderdemo.State]map[fsmorderdemo.Event]fsmorderdemo.Transition{
+var transitions = map[fsm.State]map[fsm.Event]fsm.Transition{
 	StateWaitApprove: {
 		// 取消：待审批 ---> 已取消
-		EventCancel: fsmorderdemo.Transition{
+		EventCancel: fsm.Transition{
 			From: StateWaitApprove, Event: EventCancel, To: StateCancel, Action: action.Cancel, Processor: nil,
 		},
 		// 驳回：待审批 ---> 已驳回
-		EventRefuse: fsmorderdemo.Transition{
+		EventRefuse: fsm.Transition{
 			From: StateWaitApprove, Event: EventRefuse, To: StateRefused, Action: action.Refuse, Processor: nil,
 		},
 		// 通过：待审批 ---> 已通过
-		EventAgree: fsmorderdemo.Transition{
+		EventAgree: fsm.Transition{
 			From: StateWaitApprove, Event: EventAgree, To: StateAgreed, Action: action.Agree, Processor: nil,
 		},
 	},
 	StateAgreed: {
 		// 提交退款申请(未发货订单)：已通过 ---> 退款中
-		EventRefund: fsmorderdemo.Transition{
+		EventRefund: fsm.Transition{
 			From: StateAgreed, Event: EventRefund, To: StateWaitRefund, Action: action.Refund, Processor: nil,
 		},
 		// 等待用户寄回(已发货订单)：已通过 ---> 退货中
-		EventGoodsRefund: fsmorderdemo.Transition{
+		EventGoodsRefund: fsm.Transition{
 			From: StateAgreed, Event: EventGoodsRefund, To: StateWaitDelive, Action: action.GoodsRefund, Processor: nil,
 		},
 		// 取消：已通过 ---> 已取消
-		EventCancel: fsmorderdemo.Transition{
+		EventCancel: fsm.Transition{
 			From: StateAgreed, Event: EventCancel, To: StateCancel, Action: action.Cancel, Processor: nil,
 		},
 	},
 	StateWaitDelive: {
 		// 发货：退货中 ---> 待收货
-		EventDelive: fsmorderdemo.Transition{
+		EventDelive: fsm.Transition{
 			From: StateWaitDelive, Event: EventDelive, To: StateWaitReceive, Action: action.Delive,
 			Processor: &processor.DeliveEventProcessor{},
 		},
 		// 取消：退货中 ---> 已取消
-		EventCancel: fsmorderdemo.Transition{
+		EventCancel: fsm.Transition{
 			From: StateWaitDelive, Event: EventCancel, To: StateCancel, Action: action.Cancel, Processor: nil,
 		},
 	},
 	StateWaitReceive: {
 		// 签收：待收货 ---> 退款中
-		EventSigned: fsmorderdemo.Transition{
+		EventSigned: fsm.Transition{
 			From: StateWaitReceive, Event: EventSigned, To: StateWaitRefund, Action: action.Signed, Processor: nil,
 		},
 	},
 	StateWaitRefund: {
 		// 退款完成：退款中 ---> 已完成
-		EventRefundCompleted: fsmorderdemo.Transition{
+		EventRefundCompleted: fsm.Transition{
 			From: StateWaitRefund, Event: EventRefundCompleted, To: StateCompleted, Action: action.RefundCompleted,
 			Processor: nil,
 		},
